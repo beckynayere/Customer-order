@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'oauth2_provider',  # for OAuth2
+    'orders', # for orders
 ]
 
 MIDDLEWARE = [
@@ -77,6 +80,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': 'customer_orders',
+        'USER': 'myuser',
+        'PASSWORD': 'nayere',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
