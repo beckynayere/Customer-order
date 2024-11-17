@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'oauth2_provider',  # for OAuth2
     'orders', # for orders
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -106,6 +107,11 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+OAUTH2_PROVIDER = {
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 36000,  # Token expiration time
+    'AUTHORIZATION_CODE_EXPIRE_SECONDS': 600,
+}
 
 
 # Internationalization
