@@ -5,6 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .models import Customer, Order, Product, OrderItem
 from .models import Profile
+from oauth2_provider.contrib.rest_framework import OAuth2Authentication, TokenHasScope
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import (
     CustomerSerializer, 

@@ -3,6 +3,8 @@ from django.conf.urls.static import static
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from mozilla_django_oidc.views import OIDCAuthenticationRequestView, OIDCLogoutView
+from oauth2_provider.urls import urlpatterns as oauth2_urls
+
 from . import views
 from .views import (
     CustomerView,
@@ -23,6 +25,7 @@ urlpatterns = [
     # Authentication routes
     path('', include('django.contrib.auth.urls')),
     path('openid/', include('oidc_provider.urls', namespace='oidc_provider')),
+    path('oauth/', include(oauth2_urls)),
     path('oidc/authenticate/', OIDCAuthenticationRequestView.as_view(), name='oidc_authenticate'),
     path('oidc/logout/', OIDCLogoutView.as_view(), name='oidc_logout'),
     path('oidc/', include('mozilla_django_oidc.urls')),
