@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'oauth2_provider',  # for OAuth2
     'orders', # for orders
     'social_django',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'oidc_provider',
     'mozilla_django_oidc',
 ]
