@@ -60,7 +60,9 @@ class OrderViewSet(viewsets.ModelViewSet):
 
 # Custom APIView for additional order functionality
 class OrderView(APIView):
-    permission_classes = [IsAuthenticated]
+    authentication_classes = [OAuth2Authentication]
+    permission_classes = [IsAuthenticated, TokenHasScope]
+    required_scopes = ['write']
 
     def post(self, request):
         serializer = OrderSerializer(data=request.data)
