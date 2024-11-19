@@ -36,14 +36,12 @@ ADDRESS_CHOICES = (
 )
 
 class Customer(models.Model):
-    # name = models.CharField(max_length=255)
-    
-    # def __str__(self):
-    #     return self.name
+   
 
     full_name = models.CharField(max_length=40, blank=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
+    phone_number = models.CharField(max_length=15, unique=True)
     email = models.EmailField(max_length=40, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -77,7 +75,10 @@ class Customer(models.Model):
 #         return f"Order {self.id} for {self.item}"
 class Product(models.Model):
     name = models.CharField(max_length=150)
-    # admin = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name='product')
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    item = models.CharField(max_length=100)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    time = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey("Category", related_name='products',on_delete=models.CASCADE)
     price = models.DecimalField(decimal_places=2,max_digits=1000)
     slug = models.SlugField(max_length=200, db_index=True)
@@ -89,6 +90,8 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True)
     stock = models.PositiveIntegerField()
 
+    def __str__(self):
+        return f"{self.item} - {self.customer.name}"
 
     def __str__(self):
         return f'{self.name} product'
