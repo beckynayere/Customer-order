@@ -9,7 +9,7 @@
 import africastalking
 
 # Initialize the Africa's Talking SDK
-africastalking.initialize('sandbox', 'your_api_key')  # Replace 'your_api_key' with your actual sandbox API key.
+africastalking.initialize('sandbox', 'atsk_f54b2d29acc220fb26db61768e76d18c78c0dc18fc481bcd0ce29e788020e8f6fb66a291')  # Replace 'your_api_key' with your actual sandbox API key.
 
 # Create an instance of the SMS service
 sms = africastalking.SMS

@@ -5,6 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .models import Customer, Order, Product, OrderItem
 from .models import Profile
+from .serializers import OrderSerializer
+from .africastalking_config import sms
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication, TokenHasScope
 from rest_framework.permissions import IsAuthenticated
 
@@ -59,6 +61,10 @@ class OrderViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 # Custom APIView for additional order functionality
+from .models import Customer, Order
+from .serializers import OrderSerializer
+from .africastalking_config import sms
+
 class OrderView(APIView):
     authentication_classes = [OAuth2Authentication]
     permission_classes = [IsAuthenticated, TokenHasScope]
@@ -68,9 +74,25 @@ class OrderView(APIView):
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
             order = serializer.save()
-            # SMS or custom logic here
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            # Retrieve the customer's phone number
+            customer = order.customer
+            phone_number = customer.phone_number
+
+            # Send SMS
+            message = f"Hi {customer.name}, your order for {order.item} has been placed successfully!"
+            try:
+                sms.send(message, [phone_number])
+                return Response(
+                    {"message": "Order created and SMS sent successfully!", "order": serializer.data},
+                    status=201,
+                )
+            except Exception as e:
+                return Response(
+                    {"error": f"Order created but SMS failed: {str(e)}", "order": serializer.data},
+                    status=201,
+                )
+        return Response(serializer.errors, status=400)
 
 # ViewSet for handling order items
 class OrderItemViewSet(viewsets.ModelViewSet):
