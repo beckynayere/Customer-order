@@ -1,6 +1,7 @@
 # serializers.py
 from rest_framework import serializers
-from .models import Customer, Product, Category  # Ensure Category is imported if needed
+from .models import Customer, Product, Category 
+from .models import Order
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,6 +19,11 @@ class CustomerSerializer(serializers.ModelSerializer):
             'bio'
         ]
         read_only_fields = ['id', 'date_joined']
+        
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = '__all__'
 
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField()  # This assumes your Category model has a `__str__` method for representation

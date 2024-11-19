@@ -3,19 +3,19 @@ from django.db import models
 # Create your models here.
 # orders/models.py
 from django.db import models
-from django.db import models
 import datetime as dt
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 # from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
-from django.contrib.auth.models import User
 from django.shortcuts import reverse
 from datetime import timedelta
 from django.utils import timezone
-import datetime
+# import datetime
 from django.conf import settings
 from django.db.models import Sum
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 
 CATEGORY_CHOICES = (
@@ -41,16 +41,14 @@ class Customer(models.Model):
     full_name = models.CharField(max_length=40, blank=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
-    phone_number = models.CharField(max_length=15, unique=True)
+    phone_number = models.CharField(max_length=15, unique=True, default="0000000000")  # Added default value
     email = models.EmailField(max_length=40, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
     code = models.CharField(max_length=50, unique=True)
-
-    # last_login = models.DateTimeField(null=True)
     bio = models.TextField(max_length=500, blank=True, null=True)
-    
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name', 'phone']
 
@@ -64,7 +62,9 @@ class Customer(models.Model):
     def get_short_name(self):
         return self.name.split()[0]
 
-
+    # def __str__(self):
+    #     return self.user.username
+   
 # class Order(models.Model):
 #     customer = models.ForeignKey(Customer, related_name='orders', on_delete=models.CASCADE)
 #     item = models.CharField(max_length=255)
@@ -75,12 +75,12 @@ class Customer(models.Model):
 #         return f"Order {self.id} for {self.item}"
 class Product(models.Model):
     name = models.CharField(max_length=150)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey('Customer', on_delete=models.CASCADE, null=True)
     item = models.CharField(max_length=100)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)  # Add default value here
     time = models.DateTimeField(auto_now_add=True)
-    category = models.ForeignKey("Category", related_name='products',on_delete=models.CASCADE)
-    price = models.DecimalField(decimal_places=2,max_digits=1000)
+    category = models.ForeignKey("Category", related_name='products', on_delete=models.CASCADE)
+    price = models.DecimalField(decimal_places=2, max_digits=1000)
     slug = models.SlugField(max_length=200, db_index=True)
     image = models.ImageField(upload_to='images/')
     description = models.TextField()
@@ -101,31 +101,24 @@ class Product(models.Model):
 
     def delete_product(self):
         self.delete()
+
     class Meta:
         ordering = ('-created',)
-    #     index_together = (('id', 'slug'),)
         indexes = [
             models.Index(fields=['id', 'slug']),
         ]
 
     def __str__(self):
         return self.name
-    
+
     def get_absolute_url(self):
-        return reverse("core:product", kwargs={
-            "pk" : self.pk
-        
-        })
+        return reverse("core:product", kwargs={"pk": self.pk})
 
-    def get_add_to_cart_url(self) :
-        return reverse("core:add-to-cart", kwargs={
-            "pk" : self.pk
-        })
+    def get_add_to_cart_url(self):
+        return reverse("core:add-to-cart", kwargs={"pk": self.pk})
 
-    def get_remove_from_cart_url(self) :
-        return reverse("core:remove-from-cart", kwargs={
-            "pk" : self.pk
-        })
+    def get_remove_from_cart_url(self):
+        return reverse("core:remove-from-cart", kwargs={"pk": self.pk})
 
 
 class Profile(models.Model):
@@ -140,8 +133,7 @@ class Profile(models.Model):
     GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'), ('U', 'Unisex/Parody'))
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, related_name='profile', blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True)
-
-    phone_number = models.CharField(max_length=17, blank=True)
+    phone_number = models.CharField(max_length=15, unique=True, default="0000000000") 
 
     def __str__(self):
         return self.user.email

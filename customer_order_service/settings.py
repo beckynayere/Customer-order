@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'oauth2_provider',  # for OAuth2
     'orders', # for orders
     'social_django',
+    'oidc_provider',
+    'mozilla_django_oidc',
 ]
 
 MIDDLEWARE = [
@@ -89,7 +91,26 @@ DATABASES = {
     }
 }
 
+AUTHENTICATION_BACKENDS = [
+    'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',  # Default authentication
+]
 
+LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/oidc/authenticate/'
+LOGIN_REDIRECT_URL = '/'  # Redirect after successful login
+LOGOUT_REDIRECT_URL = '/'  # Redirect after logout
+
+OIDC_RP_CLIENT_ID = 'your-client-id'
+OIDC_RP_CLIENT_SECRET = 'your-client-secret'
+OIDC_OP_AUTHORIZATION_ENDPOINT = 'https://your-oidc-provider/authorize'
+OIDC_OP_TOKEN_ENDPOINT = 'https://your-oidc-provider/token'
+OIDC_OP_USER_ENDPOINT = 'https://your-oidc-provider/userinfo'
+OIDC_OP_LOGOUT_ENDPOINT = 'https://your-oidc-provider/logout'
+
+# Optional: Custom claims mapping
+OIDC_RP_SCOPES = 'openid email profile'
+OIDC_USERNAME_ALGO = 'mozilla_django_oidc.utils.default_username_algo'
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
