@@ -1,4 +1,4 @@
-#!/home/nayere/savannah/customer_order_service/virtualenv/bin/python3.12
+#!/home/nayere/savannah/customer_order_service/virtualenv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
