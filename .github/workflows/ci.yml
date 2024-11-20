@@ -3,7 +3,7 @@ name: Django CI/CD
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   test:
@@ -38,5 +38,5 @@ jobs:
 
     - name: Run tests
       run: |
-        coverage run manage.py test api
+        coverage run manage.py test orders
         coverage report
