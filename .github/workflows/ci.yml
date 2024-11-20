@@ -13,9 +13,9 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_USER: testuser
-          POSTGRES_PASSWORD: testpassword
-          POSTGRES_DB: testdb
+          POSTGRES_USER: myuser
+          POSTGRES_PASSWORD: nayere
+          POSTGRES_DB: customer_orders
         ports:
           - 5432:5432
 
